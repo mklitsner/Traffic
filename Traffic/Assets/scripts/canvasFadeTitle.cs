@@ -16,7 +16,7 @@ public class canvasFadeTitle : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void Update () {
-		ignition=Arduino.GetComponent<DashboardInterfaceReader> ().ignition;
+		ignition=Arduino.GetComponent<DashboardInterfaceReader> ().ignitionState;
 
 	
 
@@ -24,11 +24,11 @@ public class canvasFadeTitle : MonoBehaviour {
 		//gameObject.GetComponent<Image> ().color= new Color(0,1,0,0.8f);
 
 		//if ignition turned on/off
-		if(Input.GetKeyUp(KeyCode.T)||ignition>1000)
+		if(ignition==1)
 		{
 			StartCoroutine(FadeTo(1.0f, 1.0f));
 		}
-		if(Input.GetKeyUp(KeyCode.F)||ignition<900)
+		if(ignition==0)
 		{
 			StartCoroutine(FadeTo(0.0f, 1.0f));
 		}

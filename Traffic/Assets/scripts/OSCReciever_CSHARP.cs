@@ -13,10 +13,10 @@ public class OSCReciever_CSHARP : MonoBehaviour
     public int ListenerPort = 8000; //the port you will be listening on
     public Transform controller;
     public string gameReceiver = "Cube"; //the tag of the object on stage that you want to manipulate
-    public string gameReceiver2 = "Sphere";
     private Osc handler;
     public int messageNum;
     public float Message;
+    public bool usingOSC;
 
     //VARIABLES YOU WANT TO BE ANIMATED
     //private float xRot = 0; //the rotation around the x axis
@@ -40,38 +40,47 @@ public class OSCReciever_CSHARP : MonoBehaviour
         handler.init(udp);
         handler.SetAllMessageHandler(AllMessageHandler);
         Debug.Log("Running");
+        if (!usingOSC)
+        {
+            Debug.Log("OSC Deactivated");
+        }
     }
    
 
 void Update()
     {
-      GameObject go = GameObject.Find(gameReceiver);
-        //_VAR_TYPE go2= GameObject.Find(gameReceiver2);
-        //go.transform.Rotate(xRot, yRot, zRot);
-     
-        float yDeg = yRot * 180 / 3.14159265359f;
-        //Debug.Log(yDeg);
-
-    
-        if (yDeg > 360)
+        if (usingOSC)
         {
-            Debug.Log("ANAMOLY");
-        }
-        else
-        {
-            Vector3 V3 = new Vector3(0, yDeg, 0);
+            GameObject go = GameObject.Find(gameReceiver);
+            //_VAR_TYPE go2= GameObject.Find(gameReceiver2);
+            //go.transform.Rotate(xRot, yRot, zRot);
 
-            if(go==null){
-    
+            float yDeg = yRot * 180 / 3.14159265359f;
+            //Debug.Log(yDeg);
+
+
+            if (yDeg > 360)
+            {
+                Debug.Log("ANAMOLY");
             }
-            else{
-                go.transform.eulerAngles = V3;
+            else
+            {
+                Vector3 V3 = new Vector3(0, yDeg, 0);
 
+                if (go == null)
+                {
+
+                }
+                else
+                {
+                    go.transform.eulerAngles = V3;
+
+                }
+
+                Message = yDeg;
             }
-            Message = yDeg;
-
         }
-
+       
 
         //go.transform.localScale = new Vector3(scaleVal, scaleVal, scaleVal);
         //go.transform.Translate(xVal,0,0,Space.World);

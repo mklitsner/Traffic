@@ -14,7 +14,7 @@ public class CameraChange : MonoBehaviour {
 	private int currentAngle =0;
 	private GameObject[] angles;
 
-	private int currentShot =0;
+	public int currentShot =0;
 	private Transform[] shots;
 
 	public int currentScene =0;
@@ -25,7 +25,8 @@ public class CameraChange : MonoBehaviour {
 	bool pressright;
 	public bool wheelTurned;
     public float wheelTurnIncrement=10;
-
+    public float wheelNuetralRange;
+    int wheelDir;
 
 	public bool testingArduino;
 	float counter;
@@ -130,11 +131,11 @@ public class CameraChange : MonoBehaviour {
 
 
 		if (testingArduino) {
-			currentShot = 0;
+			//currentShot = 0;
 
 			if (currentAngle < 0) {
-				currentAngle=angles.Length-10 ;
-			}if (currentAngle > angles.Length-10 ) {
+				currentAngle=angles.Length-1;
+			}if (currentAngle > angles.Length-1) {
 				currentAngle = 0;
 			}
 
@@ -144,19 +145,27 @@ public class CameraChange : MonoBehaviour {
 					wheelTurned = true;
 					currentAngle--;
                     lastWheelPos = wheelPos;
-
+                    wheelDir = -1;
+                    print("turn left");
+                    StartCoroutine("WaitforWheelTurn");
                 }
 				if (wheelPos- lastWheelPos > wheelTurnIncrement) {
 					wheelTurned = true;
 					currentAngle++;
                     lastWheelPos = wheelPos;
+                    print("turn right");
+                    wheelDir = 1;
+                    StartCoroutine("WaitforWheelTurn");
                 }
                 //check if wheel is back in neutral position
 			} else if(wheelTurned == true){
-				if (wheelPos< 10 && wheelPos > -10) {
+                if (wheelPos < 180+0.5 * wheelNuetralRange && wheelPos > 180 - 0.5 * wheelNuetralRange) {
 					wheelTurned = false;
+                    print("return to nuetral");
+                    StopCoroutine("WaitforWheelTurn");
+                    wheelDir = 0;
 
-				}
+                }
 			}
 
 
@@ -205,11 +214,18 @@ public class CameraChange : MonoBehaviour {
 			
 
 
-		print (" shot:"+currentShot+" angle:"+currentAngle+" scene:"+currentScene);
+		//print (" shot:"+currentShot+" angle:"+currentAngle+" scene:"+currentScene);
 
 		
 	}
 
+    IEnumerator WaitforWheelTurn()
+    {
+        yield return new WaitForSeconds(1);
+        currentAngle+=wheelDir;
+        StartCoroutine("WaitforWheelTurn");
+    }
+    
 
 
 

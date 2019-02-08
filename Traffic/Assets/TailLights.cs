@@ -10,17 +10,29 @@ public class TailLights : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(transform.parent.parent.GetComponent<Traffic>().speed<0.03){
+        if (transform.parent.parent == null)
+        {
 
-			transform.GetChild (0).gameObject.SetActive (true);
-			transform.GetChild (1).gameObject.SetActive (true);
+        }
+        else
+        {
 
-			print ("brakesOn");
-		}else{
-			print ("brakesOn");
-			transform.GetChild (0).gameObject.SetActive (false);
-			transform.GetChild (1).gameObject.SetActive (false);
 
-		}
+            if (transform.parent.parent.GetComponent<Traffic>().speed < 0.03)
+            {
+
+                transform.GetChild(0).gameObject.SetActive(true);
+                transform.GetChild(1).gameObject.SetActive(true);
+
+                print("brakesOn");
+            }
+            else
+            {
+                print("brakesOn");
+                transform.GetChild(0).gameObject.SetActive(false);
+                transform.GetChild(1).gameObject.SetActive(false);
+
+            }
+        }
 	}
 }

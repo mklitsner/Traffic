@@ -16,12 +16,12 @@ public class canvasFade : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void Update () {
-		ignition=Arduino.GetComponent<DashboardInterfaceReader> ().ignition;
+		ignition=Arduino.GetComponent<DashboardInterfaceReader> ().ignitionState;
 
 		//gameObject.GetComponent<Image> ().color= new Color(0,1,0,0.8f);
 
 		//if ignition turned on/off
-		if (ignition < 900) {
+		if (ignition ==0) {
 			SceneManager.LoadScene ("Title");
 		}
 

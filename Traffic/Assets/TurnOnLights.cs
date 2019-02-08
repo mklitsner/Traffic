@@ -15,9 +15,9 @@ public class TurnOnLights : MonoBehaviour {
 			transform.GetChild (0).gameObject.SetActive (true);
 			transform.GetChild (1).gameObject.SetActive (true);
 
-			print ("lightsOn");
+			//print ("lightsOn");
 		}else{
-			print ("lightsOFF");
+			//print ("lightsOFF");
 			transform.GetChild (0).gameObject.SetActive (false);
 			transform.GetChild (1).gameObject.SetActive (false);
 		

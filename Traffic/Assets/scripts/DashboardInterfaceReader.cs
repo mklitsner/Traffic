@@ -6,285 +6,174 @@ using Uduino;
 public class DashboardInterfaceReader : MonoBehaviour {
 
 
+   public GameObject OscUduinoObject;
+    ArduinoReader OUO;
+    OSCReciever_CSHARP ORC;
 
-    AnalogPin[] analogPins;
-    int[] digitalPins;
-    int[] digitalInput;
-    float[] analogInput;
+    int[] ButtonVals;
+    int[] PotVals;
 
 
 	// Use this for initialization
 	public bool usingArduino;
 
 
-	public int hazardButton=0;
+	public int hazardButtonPin=2;
+    public int hazardButtonElement;
 	public int hazardButtonState=1;
 
 
 	//Radio
 	public AnalogPin treblePot = AnalogPin.A5;
 	public int treble;
-	public AnalogPin bassPot = AnalogPin.A6;
+    public int trebleElement;
+    public AnalogPin bassPot = AnalogPin.A6;
 	public int bass;
+    public int bassElement;
 
-	public AnalogPin volumePot = AnalogPin.A3;
+    public AnalogPin volumePot = AnalogPin.A3;
 	public int volume;
-	public AnalogPin tunePot = AnalogPin.A2;
+    public int volumeElement;
+
+    public AnalogPin tunePot = AnalogPin.A2;
 	public int tune;
+    public int tuneElement;
 
-    AnalogPin ignitionPot = AnalogPin.A4;
-	public int ignition;
+    public int ignitionPin = 13;
+	public int ignitionState=0;
+    public int ignitionElement;
 
-	public int radioLED=7;
-
-    public int button3=6;
+    public int button3Pin=6;
 	public int button3State=1;
+    public int button3Element;
 
-    public int button2=5;
+    public int button2Pin = 5;
 	public int button2State=1;
+    public int button2Element;
 
-    public int button1=4;
+    public int button1Pin = 4;
 	public int button1State=1;
+    public int button1Element;
 
-    public int powerButton=3;
+    public int powerButtonPin = 3;
 	public int powerButtonState=1;
+    public int powerButtonElement;
 
     //cruise
-    public int cruiseButton=38;
+    public int cruiseButtonPin = 38;
 	public int cruiseButtonState=1;
+    public int cruiseButtonElement;
+
+    
 
     //pedals
     public AnalogPin gasPot = AnalogPin.A0;
 	public int gas;
+    public int gasElement;
     public AnalogPin brakePot = AnalogPin.A1;
 	public int brake;
+    public int brakeElement;
 
 
-	//steering wheel
 
-	//const int clkPin=52; 
-	//int newA;
-	//int oldA;
-	//const int dtPin= 50; 
-	//const int swPin= 48;
 	public float steeringWheel;
 
 
 
-
-
-	//MIRROR CONTROLS
-
-	//public string MirrorButton = "UP";
-	//public string MirrorSwitch = "M";
-
-	//public int Aoutput = 33;
-	//public int Binput = 35;
- //   public int Cinput = 39;
- //   public int Xinput = 37;
- //   public int Youtput = 31;
-
- //   public int Rinput = 29;
- //   public int Linput = 27;
-
-	//int AState = 0;
-	//int BState = 0;
-	//int CState = 0;
-	//int XState = 0;
-	//int YState = 0;
-
-	//int RState = 0;
-	//int LState = 0;
- 
-
-
-
 	void Start () {
-        ConfigurePins();
-        hazardButtonState= digitalInput[System.Array.IndexOf(digitalPins, hazardButton)];
-        //if (usingArduino) {
-        //          //arduino = Arduino.global;
-        //          ConfigurePins();
-        //}
+
+
+       OUO= OscUduinoObject.GetComponent<ArduinoReader>();
+        ORC= OscUduinoObject.GetComponent<OSCReciever_CSHARP>();
+        int[] PinsButtons = OUO.pinsButtons;
+        AnalogPin[] PinsPots = OUO.pinsPots;
+
+        hazardButtonElement = GetPin(PinsButtons, hazardButtonPin);
+        ignitionElement = GetPin(PinsButtons, ignitionPin);
+        button1Element = GetPin(PinsButtons, button1Pin);
+        button2Element = GetPin(PinsButtons, button2Pin);
+        button3Element = GetPin(PinsButtons, button3Pin);
+        powerButtonElement = GetPin(PinsButtons, powerButtonPin);
+        cruiseButtonElement = GetPin(PinsButtons, cruiseButtonPin);
+
+        trebleElement = GetAnalogPin(PinsPots, treblePot);
+        bassElement = GetAnalogPin(PinsPots, bassPot);
+        volumeElement = GetAnalogPin(PinsPots, volumePot);
+        tuneElement = GetAnalogPin(PinsPots, tunePot);
+        gasElement = GetAnalogPin(PinsPots, gasPot);
+        brakeElement = GetAnalogPin(PinsPots, brakePot);
+
+
+ 
     }
 	
 	// Update is called once per frame
 	void Update () {
+        ButtonVals = OUO.buttonValue;
+        PotVals = OUO.potValue;
+        if (ORC.usingOSC)
+        {
+            steeringWheel = ORC.Message;
 
+        }
        
 
+        hazardButtonState = ButtonVals[hazardButtonElement];
+        ignitionState = ButtonVals[hazardButtonElement];
+        button1State = ButtonVals[hazardButtonElement];
+        button2State = ButtonVals[hazardButtonElement];
+        button3State = ButtonVals[hazardButtonElement];
+        powerButtonState = ButtonVals[hazardButtonElement];
+        cruiseButtonState = ButtonVals[hazardButtonElement];
 
-		//if (usingArduino) {
+        treble = PotVals[trebleElement];
+        bass = PotVals[bassElement];
+        volume = PotVals[volumeElement];
+        tune = PotVals[tuneElement];
+        gas = PotVals[gasElement];
+        brake = PotVals[brakeElement];
 
-			//SetSteeringWheel (3);
-			//SetMirror ();
-
-
-
-
-
-
-			//treble = arduino.analogRead (treblePot);
-			//bass = arduino.analogRead (bassPot);
-
-			//volume = arduino.analogRead (volumePot);
-			//tune = arduino.analogRead (tunePot);
-
-			//ignition = arduino.analogRead (ignitionPot);
-
-
-
-
-			//hazardButtonState = arduino.digitalRead (hazardButton);
-
-			//button1State = arduino.digitalRead (button1);
-			//button2State = arduino.digitalRead (button2);
-			//button3State = arduino.digitalRead (button3);
-			//powerButtonState = arduino.digitalRead (powerButton);
-
-			//cruiseButtonState = arduino.digitalRead (cruiseButton);
-
-
-
-			//gas = arduino.analogRead (gasPot);
-			//brake = arduino.analogRead (brakePot);
-
-			//oldA = arduino.digitalRead (clkPin);
-
-		}
-
-    void ConfigurePins()
-    {
+        
 
     }
-    void ConfigureAnalog(int _pin, float _val)
-    {
 
+    public int GetPin(int[] _Pins, int _pin)
+    {
+        int keyPinNumber = 0;
+        for(int i=0; i < _Pins.Length; i++)
+        {
+            if (_Pins[i]==_pin)
+            {
+                keyPinNumber = i;
+            }
+                
+        }
+        return keyPinNumber;
     }
+
+
+
+
+    public int GetAnalogPin(AnalogPin[] _Pins, AnalogPin _pin)
+    {
+        int keyPinNumber = 0;
+        for (int i = 0; i < _Pins.Length; i++)
+        {
+            if (_Pins[i] == _pin)
+            {
+                keyPinNumber = i;
+            }
+
+        }
+        return keyPinNumber;
+    }
+
+    
+
 
 }
 
-	//	void ConfigurePins( )
-	//{
-
-	//	ConfigureAnalog (treblePot);
-	//	ConfigureAnalog (bassPot);
-
-	//	ConfigureAnalog (volumePot);
-	//	ConfigureAnalog (tunePot);
-
-	//	ConfigureAnalog (ignitionPot);
-
-	//	ConfigureButton (hazardButton);
-
-	//	ConfigureButton (button3);
-	//	ConfigureButton (button2);
-	//	ConfigureButton (button1);
-	//	ConfigureButton (powerButton);
-
-
-	//	ConfigureButton (cruiseButton);
-
-	//	ConfigureAnalog (gasPot);
-	//	ConfigureAnalog (brakePot);
-
-	////steering wheel encoder
-	//	ConfigureButton (clkPin);
-	//	ConfigureButton (dtPin);
-
-
-	//	ConfigureOutput (Youtput);
-	//	ConfigureOutput (Aoutput);
-	//	ConfigureButton (Binput);
-	//	ConfigureButton (Cinput);
-	//	ConfigureButton (Xinput);
-	//	ConfigureButton (Linput);
-	//	ConfigureButton (Rinput);
-
-	//	//oldA = arduino.digitalRead (clkPin);
-
-
-
-
-
-	//}
-
-
-
-	//void ConfigureAnalog(int pin){
-	//	arduino.pinMode(pin, PinMode.ANALOG);
-	//	arduino.reportAnalog(pin, 1);
-	//}
-
-	//void ConfigureButton(int pin){
-	//	arduino.pinMode(pin, PinMode.INPUT);
-	//	arduino.reportDigital((byte)(pin/8), 1);
-	//	arduino.digitalWrite (pin, 1);
-		
-	//}
-
-	//void ConfigureOutput(int pin){
-	//	arduino.pinMode(pin, PinMode.OUTPUT);
-	//	arduino.reportDigital((byte)(pin/8), 1);
-	//	arduino.digitalWrite (pin, 0);
-
-	//}
-
-
-
-
-
-	//void SetSteeringWheel (int maxRotation){
-	//	newA = arduino.digitalRead (clkPin);
-	//	if (newA != oldA) {
-	//		if (arduino.digitalRead (dtPin) != newA) {
-	//			steeringWheel++;
-	//		} else {
-	//			steeringWheel--;
-	//		}
-	//	}
-	//	oldA = newA;
-
-	//	if (steeringWheel > maxRotation) {
-	//		steeringWheel = maxRotation;
-	//	}else if(steeringWheel< -maxRotation){
-	//		steeringWheel = -maxRotation;
-	//	}
-	//}
-
-
-	//void SetMirror (){
-	//	//AState = arduino.digitalRead(Aoutput);
-	//	//CState = arduino.digitalRead(Cinput);
-	//	//BState = arduino.digitalRead(Binput);
-	//	//XState = arduino.digitalRead(Xinput);
-	//	//YState = arduino.digitalRead(Youtput);
-	//	//RState = arduino.digitalRead(Rinput);
-	//	//LState = arduino.digitalRead(Linput);
-
-	//	if(LState==0){
-	//		MirrorSwitch = "L";
-	//	}else if(RState==0){
-	//		MirrorSwitch = "R";
-	//	}else{
-	//		MirrorSwitch = "M";
-	//	}
-
-
-	//	if (CState == 0 && BState == 0) {
-
-	//		MirrorButton = "UP";
-	//	} else if (BState == 0) {
-	//		//UpmirrorPressed
-	//		MirrorButton = "RIGHT";
-	//	} else if (XState == 0) {
-	//		MirrorButton = "LEFT";
-	//	} else{
-	//		MirrorButton = "OFF";
-	//	}
-
-		
-	//}
+	
 
 
 

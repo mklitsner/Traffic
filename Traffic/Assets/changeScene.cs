@@ -15,11 +15,11 @@ public class changeScene : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void Update () {
-		ignition = Arduino.GetComponent<DashboardInterfaceReader> ().ignition;
-		if (ignition > 1000) {
+		ignition = Arduino.GetComponent<DashboardInterfaceReader> ().ignitionState;
+		if (ignition ==1) {
 			timeLeft = timeLeft - Time.deltaTime;
 			if (timeLeft < 0) {
-				SceneManager.LoadScene ("Car Test1");
+				SceneManager.LoadScene ("Car Test2");
 			}
 		}
 	}

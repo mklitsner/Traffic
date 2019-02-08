@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class canvasFade2 : MonoBehaviour {
 	public GameObject Arduino;
 	float timeLeft = 20.0f;
-	public float ignition;
+	public int ignition;
 	public Color solidColor;
 	public Color alpha;
 
@@ -17,7 +17,7 @@ public class canvasFade2 : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void Update () {
-		ignition=Arduino.GetComponent<DashboardInterfaceReader> ().ignition;
+		ignition=Arduino.GetComponent<DashboardInterfaceReader> ().ignitionState;
 		
 
 

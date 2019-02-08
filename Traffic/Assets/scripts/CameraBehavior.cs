@@ -83,16 +83,21 @@ public class CameraBehavior : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate() {
+        if (target == null) { }
+        else
+        {
 
-		if (followTarget) {
-			transform.LookAt (target);
-			transform.position = new Vector3(
-				target.position.x + xOffset + randomValue,
-				target.position.y + yOffset + randomValue,
-				target.position.z + zOffset + randomValue);
+
+            if (followTarget)
+            {
+                transform.LookAt(target);
+                transform.position = new Vector3(
+                    target.position.x + xOffset + randomValue,
+                    target.position.y + yOffset + randomValue,
+                    target.position.z + zOffset + randomValue);
+            }
+
         }
-		 
-
 	
 		
 	}

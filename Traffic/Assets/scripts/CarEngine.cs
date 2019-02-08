@@ -128,7 +128,7 @@ public class CarEngine : MonoBehaviour {
 	void OnCollisionStay(Collision collision){
 		if (reverse > 0) {
 			reverse = -10;
-			print (gameObject.name + "had a collision");
+			//print (gameObject.name + "had a collision");
 		} else {
 			reverse = 1; 
 		}
