@@ -119,12 +119,12 @@ public class DashboardInterfaceReader : MonoBehaviour {
        
 
         hazardButtonState = ButtonVals[hazardButtonElement];
-        ignitionState = ButtonVals[hazardButtonElement];
-        button1State = ButtonVals[hazardButtonElement];
-        button2State = ButtonVals[hazardButtonElement];
-        button3State = ButtonVals[hazardButtonElement];
-        powerButtonState = ButtonVals[hazardButtonElement];
-        cruiseButtonState = ButtonVals[hazardButtonElement];
+        ignitionState = ButtonVals[ignitionElement];
+        button1State = ButtonVals[button1Element];
+        button2State = ButtonVals[button2Element];
+        button3State = ButtonVals[button3Element];
+        powerButtonState = ButtonVals[powerButtonElement];
+        cruiseButtonState = ButtonVals[cruiseButtonElement];
 
         treble = PotVals[trebleElement];
         bass = PotVals[bassElement];

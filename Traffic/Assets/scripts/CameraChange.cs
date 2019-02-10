@@ -9,6 +9,7 @@ public class CameraChange : MonoBehaviour {
 //	private int wheelPos;
 
 	public GameObject DashBoard;
+    DashboardInterfaceReader DIR;
 	public GameObject Arduino;
 
 	private int currentAngle =0;
@@ -44,8 +45,8 @@ public class CameraChange : MonoBehaviour {
 	void Start () {
 
 
-       
 
+        DIR = DashBoard.GetComponent<DashboardInterfaceReader>();
 
 
 
@@ -54,13 +55,24 @@ public class CameraChange : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+        int[] radioButtons = new int[3];
+        radioButtons[0] = DIR.button1State;
+        radioButtons[1] = DIR.button2State;
+        radioButtons[2] = DIR.button3State;
 
+        for(int i=0; i<radioButtons.Length; i++)
+        {
+            if (radioButtons[i] == 0)
+            {
+                currentScene = i;
+            }
+        }
 
 		
 		//string mirrorButton =DashBoard.GetComponent<DashboardInterfaceReader> ().MirrorButton;
 		//string	mirrorSwitch=DashBoard.GetComponent<DashboardInterfaceReader> ().MirrorSwitch;
-		float wheelPos=DashBoard.GetComponent<DashboardInterfaceReader> ().steeringWheel;
-		int cruiseButton=DashBoard.GetComponent<DashboardInterfaceReader> ().cruiseButtonState;
+		float wheelPos= DIR.steeringWheel;
+		int cruiseButton= DIR.cruiseButtonState;
 
 		 
 
