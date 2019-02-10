@@ -21,11 +21,15 @@ public class CameraChange : MonoBehaviour {
 	public int currentScene =0;
 	private Transform[] scenes;
 
-	bool pressleft;
+    float wheelPos;
+    float turnStrength;
+    bool wheelTurnedHard=false;
+    bool pressleft;
 	bool pressup;
 	bool pressright;
 	public bool wheelTurned;
-    public float wheelTurnIncrement=10;
+    public float wheelTurnIncrement;
+    public float wheelTurnHardIncrement;
     public float wheelNuetralRange;
     int wheelDir;
 
@@ -54,7 +58,7 @@ public class CameraChange : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+        wheelPos = DIR.steeringWheel;
         int[] radioButtons = new int[3];
         radioButtons[0] = DIR.button1State;
         radioButtons[1] = DIR.button2State;
@@ -71,7 +75,9 @@ public class CameraChange : MonoBehaviour {
 		
 		//string mirrorButton =DashBoard.GetComponent<DashboardInterfaceReader> ().MirrorButton;
 		//string	mirrorSwitch=DashBoard.GetComponent<DashboardInterfaceReader> ().MirrorSwitch;
-		float wheelPos= DIR.steeringWheel;
+		
+
+       
 		int cruiseButton= DIR.cruiseButtonState;
 
 		 
@@ -141,75 +147,110 @@ public class CameraChange : MonoBehaviour {
 			}
 		}
 
+     
+        turnStrength = 10 *Mathf.Abs(wheelPos / 180);
+        //Debug.Log(turnStrength);
 
-		if (testingArduino) {
-			//currentShot = 0;
+        if (testingArduino)
+        {
+            //currentShot = 0;
 
-			if (currentAngle < 0) {
-				currentAngle=angles.Length-1;
-			}if (currentAngle > angles.Length-1) {
-				currentAngle = 0;
-			}
+            if (currentAngle < 0)
+            {
+                currentAngle = angles.Length - 1;
+            }
+            if (currentAngle > angles.Length - 1)
+            {
+                currentAngle = 0;
+            }
 
-			if (wheelTurned == false) {
+            if (!wheelTurned)
+            {
 
-				if (wheelPos-lastWheelPos < -wheelTurnIncrement) {
-					wheelTurned = true;
-					currentAngle--;
-                    lastWheelPos = wheelPos;
+                if (wheelPos < -wheelTurnIncrement)
+                {
+                    wheelTurned = true;
                     wheelDir = -1;
-                    print("turn left");
+                    Debug.Log("turn left");
                     StartCoroutine("WaitforWheelTurn");
+                
+
+
+
                 }
-				if (wheelPos- lastWheelPos > wheelTurnIncrement) {
-					wheelTurned = true;
-					currentAngle++;
-                    lastWheelPos = wheelPos;
-                    print("turn right");
+
+                if (wheelPos > wheelTurnIncrement)
+                {
+                    wheelTurned = true;
                     wheelDir = 1;
+                    Debug.Log("turn right");
                     StartCoroutine("WaitforWheelTurn");
+                  
+
+
                 }
-                //check if wheel is back in neutral position
-			} else if(wheelTurned == true){
-                if (wheelPos < 180+0.5 * wheelNuetralRange && wheelPos > 180 - 0.5 * wheelNuetralRange) {
-					wheelTurned = false;
-                    print("return to nuetral");
+            }
+            if (!wheelTurnedHard)
+            {
+                if (-wheelTurnHardIncrement > wheelPos)
+                {
+                    Debug.Log("turn hard left");
+                    wheelTurnedHard = true;
+                    currentAngle--;
+                }
+                if (wheelTurnHardIncrement < wheelPos )
+                {
+                    wheelTurnedHard = true;
+                    currentAngle++;
+                    Debug.Log("turn hard right");
+                }
+
+            }
+
+            //check if wheel is back in neutral position
+           if (wheelTurned)
+            {
+                if (wheelPos < wheelNuetralRange && wheelPos > -wheelNuetralRange)
+                {
+                    wheelTurned = false;
+                    wheelTurnedHard = false;
+                    Debug.Log("return to nuetral");
                     StopCoroutine("WaitforWheelTurn");
                     wheelDir = 0;
 
                 }
-			}
+            }
 
 
 
-			//if (mirrorSwitch == "L") {
+                //if (mirrorSwitch == "L") {
 
-			//	currentScene = 2;
-			//}else if (mirrorSwitch == "M") {
+                //	currentScene = 2;
+                //}else if (mirrorSwitch == "M") {
 
-			//	currentScene = 1;
-			//}else if (mirrorSwitch == "R") {
+                //	currentScene = 1;
+                //}else if (mirrorSwitch == "R") {
 
-			//	currentScene = 0;
-			//}
+                //	currentScene = 0;
+                //}
 
 
-			//if (mirrorButton == "LEFT") {
-			//	pressleft = true;
-			//	pressright = false;
-			//	pressup = false;
-			//} else if (mirrorButton == "UP") {
-			//	pressup = true;
-			//	pressleft = false;
-			//	pressright = false;
-			//} else if (mirrorButton == "RIGHT") {
-			//	pressright = true;
-			//	pressleft = false;
-			//	pressup = false;
-			//} else if (mirrorButton == "OFF") {
+                //if (mirrorButton == "LEFT") {
+                //	pressleft = true;
+                //	pressright = false;
+                //	pressup = false;
+                //} else if (mirrorButton == "UP") {
+                //	pressup = true;
+                //	pressleft = false;
+                //	pressright = false;
+                //} else if (mirrorButton == "RIGHT") {
+                //	pressright = true;
+                //	pressleft = false;
+                //	pressup = false;
+                //} else if (mirrorButton == "OFF") {
 
-			//}
-		}
+                //}
+            }
 
 
 
@@ -233,9 +274,14 @@ public class CameraChange : MonoBehaviour {
 
     IEnumerator WaitforWheelTurn()
     {
-        yield return new WaitForSeconds(1);
-        currentAngle+=wheelDir;
-        StartCoroutine("WaitforWheelTurn");
+       
+
+        yield return new WaitForSeconds(10.5f-turnStrength);
+        currentAngle += wheelDir;
+        if (wheelDir != 0)
+        {
+            StartCoroutine("WaitforWheelTurn");
+        }
     }
     
 
