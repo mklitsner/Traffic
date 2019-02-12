@@ -45,20 +45,22 @@ public class ArduinoReader : MonoBehaviour
         if (usingArduino)
         {
 
-            for (int i = 0; i < potValue.Length; i++)
-            {
-                //potValue[i] = UduinoManager.Instance.analogRead(pinsPots[i]);
-                potValue[i] = UduinoManager.Instance.analogRead(pinsPots[i], "ReadPot");
-            }
-            UduinoManager.Instance.SendBundle("ReadPot");
-
+           
+           
 
             for (int i = 0; i < buttonValue.Length; i++)
             {
                 buttonValue[i] = UduinoManager.Instance.digitalRead(pinsButtons[i]);
                 //buttonValue[i] = UduinoManager.Instance.analogRead(pinsButtons[i], "ReadButton");
             }
+            
 
+            for (int i = 0; i < potValue.Length; i++)
+            {
+                //potValue[i] = UduinoManager.Instance.analogRead(pinsPots[i]);
+                potValue[i] = UduinoManager.Instance.analogRead(pinsPots[i], "ReadPot");
+            }
+            UduinoManager.Instance.SendBundle("ReadPot");
         }
         //UduinoManager.Instance.SendBundle("ReadButton");
 
