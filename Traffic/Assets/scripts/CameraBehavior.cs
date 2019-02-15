@@ -9,6 +9,7 @@ public class CameraBehavior : MonoBehaviour {
 
 	//if checked off, the camera will appear near the target but will not follow it
 	public bool followTarget;
+    public bool lookatTarget;
 
 	public float xOffset;
 	public float yOffset;
@@ -95,6 +96,10 @@ public class CameraBehavior : MonoBehaviour {
                     target.position.x + xOffset + randomValue,
                     target.position.y + yOffset + randomValue,
                     target.position.z + zOffset + randomValue);
+            }
+            if (lookatTarget)
+            {
+                transform.LookAt(target);
             }
 
         }

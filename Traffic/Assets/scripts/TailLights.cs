@@ -16,7 +16,7 @@ public class TailLights : MonoBehaviour {
         }
         else
         {
-            if (transform.parent.parent.GetComponent<Traffic>() == null)
+            if (transform.parent.parent.GetComponent<TrafficScript>() == null)
             {
 
             }
@@ -27,7 +27,7 @@ public class TailLights : MonoBehaviour {
 
 
 
-                if (transform.parent.parent.GetComponent<Traffic>().speed < 0.03)
+                if (transform.parent.parent.GetComponent<TrafficScript>().speed < 0.03)
                 {
 
                     transform.GetChild(0).gameObject.SetActive(true);

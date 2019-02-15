@@ -12,11 +12,11 @@ public class CameraChange : MonoBehaviour {
     DashboardInterfaceReader DIR;
 	public GameObject Arduino;
 
-	private int currentAngle =0;
-	private GameObject[] angles;
+	public int currentAngle =1;
+	public GameObject[] angles;
 
 	public int currentShot =0;
-	private Transform[] shots;
+	public  Transform[] shots;
 
 	public int currentScene =0;
 	private Transform[] scenes;
@@ -72,13 +72,14 @@ public class CameraChange : MonoBehaviour {
             }
         }
 
-		
-		//string mirrorButton =DashBoard.GetComponent<DashboardInterfaceReader> ().MirrorButton;
-		//string	mirrorSwitch=DashBoard.GetComponent<DashboardInterfaceReader> ().MirrorSwitch;
-		
-
        
-		int cruiseButton= DIR.cruiseButtonState;
+
+        //string mirrorButton =DashBoard.GetComponent<DashboardInterfaceReader> ().MirrorButton;
+        //string	mirrorSwitch=DashBoard.GetComponent<DashboardInterfaceReader> ().MirrorSwitch;
+
+
+
+        int cruiseButton = DIR.cruiseButtonState;
 
 		 
 
@@ -98,7 +99,16 @@ public class CameraChange : MonoBehaviour {
 
 				for (int a = 0; a < angles.Length; a++) {
 					angles [a] = shots [i].GetChild (a).gameObject;
-					if (currentScene == s) {
+
+                    if (currentAngle < 0)
+                    {
+                        currentAngle = angles.Length - 1;
+                    }
+                    if (currentAngle > angles.Length - 1)
+                    {
+                        currentAngle = 0;
+                    }
+                    if (currentScene == s) {
 						if (currentShot == i) {
 							if (currentAngle == a) {
 								angles [a].SetActive (true);
@@ -112,10 +122,10 @@ public class CameraChange : MonoBehaviour {
 								angles [a].GetComponent<VignetteAndChromaticAberration> ().chromaticAberration
 								=GetComponent<VignetteAndChromaticAberration> ().chromaticAberration;
 
+                               
 
 
-
-								if (cruiseButton == 0) {
+                                if (cruiseButton == 0) {
 									angles [a].GetComponent<CameraBehavior> ().followTarget=true;
 								} else {
 									angles [a].GetComponent<CameraBehavior> ().followTarget=false;
@@ -151,20 +161,12 @@ public class CameraChange : MonoBehaviour {
         turnStrength = 10 *Mathf.Abs(wheelPos / 180);
         //Debug.Log(turnStrength);
 
-        if (testingArduino)
-        {
-            //currentShot = 0;
 
-            if (currentAngle < 0)
-            {
-                currentAngle = angles.Length - 1;
-            }
-            if (currentAngle > angles.Length - 1)
-            {
-                currentAngle = 0;
-            }
+        //currentShot = 0;
 
-            if (!wheelTurned)
+   
+
+        if (!wheelTurned)
             {
 
                 if (wheelPos < -wheelTurnIncrement)
@@ -250,7 +252,7 @@ public class CameraChange : MonoBehaviour {
                 //} else if (mirrorButton == "OFF") {
 
                 //}
-            }
+            
 
 
 
@@ -277,7 +279,9 @@ public class CameraChange : MonoBehaviour {
        
 
         yield return new WaitForSeconds(10.5f-turnStrength);
+       
         currentAngle += wheelDir;
+       
         if (wheelDir != 0)
         {
             StartCoroutine("WaitforWheelTurn");

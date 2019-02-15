@@ -47,10 +47,10 @@ public class CarEngine : MonoBehaviour {
 		pitch=Arduino.GetComponent<DashboardOutput> ().pitch;
 
 		velocity = GetComponent<Rigidbody> ().velocity.magnitude;
-        float slowMoSpeed= scale(-1, 1, 0.1f, 4, intensity);
-        Time.timeScale = slowMoSpeed;
+     //   float slowMoSpeed= scale(-1, 1, 0.1f, 4, intensity);
+     //   Time.timeScale = slowMoSpeed;
         
-     Time.fixedDeltaTime = slowMoSpeed * 0.02f;
+     //Time.fixedDeltaTime = slowMoSpeed * 0.02f;
         ApplySteer();
 		ApplyAcceleration ();
 		UpdateMeshPositions ();

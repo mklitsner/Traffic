@@ -21,17 +21,18 @@ public class ArduinoReader : MonoBehaviour
     {
         if (usingArduino)
         {
+            for (int i = 0; i < pinsButtons.Length; i++)
+            {
+                UduinoManager.Instance.pinMode(pinsButtons[i], PinMode.Input_pullup);
+            }
+
             for (int i = 0; i < pinsPots.Length; i++)
             {
                 UduinoManager.Instance.pinMode(pinsPots[i], PinMode.Input);
             }
 
 
-            for (int i = 0; i < pinsButtons.Length; i++)
-            {
-                UduinoManager.Instance.pinMode(pinsButtons[i], PinMode.Input_pullup);
-            }
-
+          
         }
         else
         {

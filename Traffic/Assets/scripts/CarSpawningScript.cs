@@ -24,7 +24,7 @@ public class CarSpawningScript : MonoBehaviour {
 		intensity = Arduino.GetComponent<DashboardOutput> ().intensity;
 		channel = Arduino.GetComponent<DashboardOutput> ().channelTune;
 
-		spawnFrequency = scale (-1, 1, 5, 1,intensity);
+		//spawnFrequency = scale (-1, 1, 5, 1,intensity);
 
 		spawns = new Transform[transform.childCount];
 
@@ -39,13 +39,24 @@ public class CarSpawningScript : MonoBehaviour {
 				int carLength = cars.Length;
 
 				if(Random.Range(0,spawnRatio)==0){
-					GameObject newCar= Instantiate(cars[Random.Range(0,carLength)]);
+                    if (spawns[i].GetComponent<CollidedWithObject>().occupied)
+                    {
 
-				newCar.transform.position=spawns[i].position;
-					newCar.transform.rotation=spawns[i].rotation;
-					newCar.GetComponent<Traffic>().speedmultiplier=Random.Range(spawnSpeed,spawnSpeed+0.01f);
+                    }
+                    else
+                    {
 
-					newCar.GetComponent<Renderer>().material.SetColor("_CarColor",new Color(Random.Range(0,1.0f),Random.Range(0,1.0f),Random.Range(0,1.0f)));
+
+                        GameObject newCar = Instantiate(cars[Random.Range(0, carLength)]);
+
+                        //newCar.transform.position=new Vector3 (spawns[i].position.x,newCar.transform.position.y,spawns[i].position.z);
+                        newCar.transform.position = spawns[i].position;
+                        newCar.transform.rotation = spawns[i].rotation;
+                        newCar.GetComponent<TrafficScript>().speedmultiplier = Random.Range(spawnSpeed, spawnSpeed + 0.01f);
+
+                        newCar.GetComponent<Renderer>().material.SetColor("_CarColor", new Color(Random.Range(0, 1.0f), Random.Range(0, 1.0f), Random.Range(0, 1.0f)));
+                        newCar.transform.SetParent(transform.parent); 
+                    }
 				}
 				}
 

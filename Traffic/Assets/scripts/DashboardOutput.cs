@@ -16,7 +16,9 @@ public class DashboardOutput : MonoBehaviour {
 	[Range(1f,3.0f)]public float musicSpeed=1.0f;
 	[Range(0.5f,2.0f)]public float pitch=1.0f;
 	[Range(-1,1)]public float intensity;
-	[Range(1,5)]public float channelTune;
+    [Range(0, 1)] public float intensityBuild;
+
+    [Range(1,5)]public float channelTune;
 	public bool hazardlights=false;
 
 	public bool testingOnArduino;
@@ -28,9 +30,27 @@ public class DashboardOutput : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+        if (intensity > 0.8f)
+        {
+            if (intensityBuild < 1)
+            {
+                intensityBuild += 0.001f;
+
+            }
 
 
-		CorrectPitchOnSpeedChange ();
+        }
+        else
+        {
+            if (intensityBuild > 0)
+            {
+                intensityBuild -= 0.1f;
+
+            }
+
+        }
+
+        CorrectPitchOnSpeedChange ();
 
 		if (testingOnArduino) {
 			MapGasandBrakeToIntensity();
