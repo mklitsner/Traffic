@@ -13,13 +13,13 @@ public class CameraChange : MonoBehaviour {
 	public GameObject Arduino;
 
 	public int currentAngle =1;
-	public GameObject[] angles;
+	 GameObject[] angles;
 
 	public int currentShot =0;
-	public  Transform[] shots;
+	  Transform[] shots;
 
 	public int currentScene =0;
-	private Transform[] scenes;
+    public Transform[] scenes;
 
     float wheelPos;
     float turnStrength;
@@ -87,75 +87,99 @@ public class CameraChange : MonoBehaviour {
 
 		scenes = new Transform[transform.childCount];
 
-		for (int s = 0; s < scenes.Length; s++) {
-			scenes [s] = transform.GetChild (s).transform;
+        for (int s = 0; s < scenes.Length; s++)
+        {
+            scenes[s] = transform.GetChild(s);
+                 shots = new Transform[scenes[s].childCount];
 
-			shots = new Transform[scenes [s].childCount];
 
-			for (int i = 0; i < shots.Length; i++) {
-				shots [i] = scenes [s].GetChild (i).transform;
 
-				angles = new GameObject[shots [i].childCount];
 
-				for (int a = 0; a < angles.Length; a++) {
-					angles [a] = shots [i].GetChild (a).gameObject;
+                for (int i = 0; i < shots.Length; i++)
+                {
+                    shots[i] = scenes[s].GetChild(i).transform;
 
-                    if (currentAngle < 0)
+                    angles = new GameObject[shots[i].childCount];
+
+                    for (int a = 0; a < angles.Length; a++)
                     {
-                        currentAngle = angles.Length - 1;
+                        angles[a] = shots[i].GetChild(a).gameObject;
+
+                        if (currentAngle < 0)
+                        {
+                            currentAngle = angles.Length - 1;
+                        }
+                        if (currentAngle > angles.Length - 1)
+                        {
+                            currentAngle = 0;
+                        }
+                        if (currentScene == s)
+                        {
+                            if (currentShot == i)
+                            {
+                                if (currentAngle == a)
+                                {
+
+                                    angles[a].SetActive(true);
+                                    angles[a].GetComponent<BloomOptimized>().threshold
+                                    = GetComponent<BloomOptimized>().threshold;
+                                    angles[a].GetComponent<BloomOptimized>().intensity
+                                    = GetComponent<BloomOptimized>().intensity;
+                                    angles[a].GetComponent<VignetteAndChromaticAberration>().intensity
+                                    = GetComponent<VignetteAndChromaticAberration>().intensity;
+
+                                    angles[a].GetComponent<VignetteAndChromaticAberration>().chromaticAberration
+                                    = GetComponent<VignetteAndChromaticAberration>().chromaticAberration;
+
+
+
+
+                                    if (cruiseButton == 0)
+                                    {
+                                        angles[a].GetComponent<CameraBehavior>().followTarget = true;
+                                    }
+                                    else
+                                    {
+                                        angles[a].GetComponent<CameraBehavior>().followTarget = false;
+
+                                        if (pressup)
+                                        {
+
+                                            angles[a].transform.Translate(0, 0, 0);
+                                        }
+                                        else if (pressleft)
+                                        {
+                                            angles[a].transform.Translate(0, 0, scale(-1, 1, 0.01f, 0.2f, Arduino.GetComponent<DashboardOutput>().intensity));
+                                        }
+                                        else if (pressright)
+                                        {
+                                            angles[a].transform.Translate(0, 0, scale(-1, 1, -0.01f, -0.2f, Arduino.GetComponent<DashboardOutput>().intensity));
+                                        }
+                                    }
+
+
+
+                                }
+                                else
+                                {
+                                    angles[a].SetActive(false);
+                                }
+
+                            }
+                            else
+                            {
+                                angles[a].SetActive(false);
+                            }
+
+                        }
+                        else
+                        {
+                            angles[a].SetActive(false);
+                        }
                     }
-                    if (currentAngle > angles.Length - 1)
-                    {
-                        currentAngle = 0;
-                    }
-                    if (currentScene == s) {
-						if (currentShot == i) {
-							if (currentAngle == a) {
-								angles [a].SetActive (true);
-								angles [a].GetComponent<BloomOptimized> ().threshold
-								=GetComponent<BloomOptimized> ().threshold;
-								angles [a].GetComponent<BloomOptimized> ().intensity
-								=GetComponent<BloomOptimized> ().intensity;
-								angles [a].GetComponent<VignetteAndChromaticAberration> ().intensity
-								=GetComponent<VignetteAndChromaticAberration> ().intensity;
-
-								angles [a].GetComponent<VignetteAndChromaticAberration> ().chromaticAberration
-								=GetComponent<VignetteAndChromaticAberration> ().chromaticAberration;
-
-                               
-
-
-                                if (cruiseButton == 0) {
-									angles [a].GetComponent<CameraBehavior> ().followTarget=true;
-								} else {
-									angles [a].GetComponent<CameraBehavior> ().followTarget=false;
-
-									if (pressup) {
-
-										angles [a].transform.Translate (0, 0, 0);
-									} else if (pressleft) {
-										angles [a].transform.Translate (0, 0, scale (-1, 1, 0.01f, 0.2f, Arduino.GetComponent<DashboardOutput> ().intensity));
-									} else if (pressright) {
-										angles [a].transform.Translate (0, 0, scale (-1, 1, -0.01f, -0.2f, Arduino.GetComponent<DashboardOutput> ().intensity));
-									}
-								}
-
-
-
-							} else {
-								angles [a].SetActive (false);
-							}
-						
-						} else {
-							angles [a].SetActive (false);
-						}
-
-					} else {
-						angles [a].SetActive (false);
-					}
-				}
-			}
-		}
+                
+            }
+        }
 
      
         turnStrength = 10 *Mathf.Abs(wheelPos / 180);

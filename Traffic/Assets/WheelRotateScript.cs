@@ -19,6 +19,6 @@ public class WheelRotateScript : MonoBehaviour
     {
         float speed= Car.GetComponent<TrafficScript>().speed;
 
-        transform.Rotate(-speed, 0, 0);
+        transform.Rotate(-speed*100, 0, 0);
     }
 }

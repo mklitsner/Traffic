@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class changeScene : MonoBehaviour {
 	public GameObject Arduino;
 	float timeLeft = 1.0f;
-	public float ignition;
+	public int ignition;
 
 
 	// Use this for initialization

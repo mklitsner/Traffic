@@ -10,10 +10,11 @@ public class DashboardOutput : MonoBehaviour {
 	public AudioMixer nuetralMixer;
 	public AudioMixer sadMixer;
 	public AudioMixer spookyMixer;
+    //public AudioMixer upliftingMixerNeo;
+    //public AudioMixer spookyMixerNeo;
 
-
-
-	[Range(1f,3.0f)]public float musicSpeed=1.0f;
+    [Range(-80, 0f)] public float masterVol = -12;
+    [Range(1f,3.0f)]public float musicSpeed=1.0f;
 	[Range(0.5f,2.0f)]public float pitch=1.0f;
 	[Range(-1,1)]public float intensity;
     [Range(0, 1)] public float intensityBuild;
@@ -24,11 +25,13 @@ public class DashboardOutput : MonoBehaviour {
 	public bool testingOnArduino;
 
 
-	bool resonance;
 
 
-	// Update is called once per frame
-	void Update () {
+
+
+
+    // Update is called once per frame
+    void Update () {
 
         if (intensity > 0.8f)
         {
@@ -69,11 +72,13 @@ public class DashboardOutput : MonoBehaviour {
 		MapIntensityToAudio (intensity,nuetralMixer,"nuetralLo","nuetralMed","nuetralHi");
 		MapIntensityToAudio (intensity,sadMixer,"sadLo","sadMed","sadHi");
 		MapIntensityToAudio (intensity,upliftingMixer,"upliftingLo","upliftingMed","upliftingHi");
-		MapIntensityToAudio (intensity,spookyMixer,"spookyLo","spookyMed","spookyHi");
+        //MapIntensityToAudio(intensity, upliftingMixerNeo, "upliftingLo", "upliftingMed", "upliftingHi");
+        MapIntensityToAudio (intensity,spookyMixer,"spookyLo","spookyMed","spookyHi");
+        //MapIntensityToAudio(intensity, spookyMixerNeo, "spookyLo", "spookyMed", "spookyHi");
 
 
-	
-		musicSpeed = scale(-1.0f,1.0f,1f,2.0f,intensity);
+
+        musicSpeed = scale(-1.0f,1.0f,1f,2.0f,intensity);
 
 		musicSpeed = Mathf.Round (musicSpeed * 100) / 100;
 
@@ -87,39 +92,39 @@ public class DashboardOutput : MonoBehaviour {
 
 		if (hazardlights) {
 			masterMixer.SetFloat ("sirenVol", 0);
-			
+			        
 		} else {
 			masterMixer.SetFloat ("sirenVol", -80);
 		}
 
 
-		int pwr = GameObject.Find ("DashboardController").GetComponent<DashboardInterfaceReader> ().powerButtonState;
+		//int pwr = GameObject.Find ("DashboardController").GetComponent<DashboardInterfaceReader> ().powerButtonState;
 		int button1 = GameObject.Find ("DashboardController").GetComponent<DashboardInterfaceReader> ().button1State;
 		int button2 = GameObject.Find ("DashboardController").GetComponent<DashboardInterfaceReader> ().button2State;
 		int button3 = GameObject.Find ("DashboardController").GetComponent<DashboardInterfaceReader> ().button3State;
-		float lopass= scale(0,1020,5000,0,GameObject.Find ("DashboardController").GetComponent<DashboardInterfaceReader> ().bass);
-		float hipass= scale(0,1020,0,5000,GameObject.Find ("DashboardController").GetComponent<DashboardInterfaceReader> ().treble);
+		float lopass= scale(1020, 0,5000,0,GameObject.Find ("DashboardController").GetComponent<DashboardInterfaceReader> ().bass);
+		float hipass= scale(1020, 0,0,5000,GameObject.Find ("DashboardController").GetComponent<DashboardInterfaceReader> ().treble);
 		float lores;
 		float hires;
 
 
-		if (button1 == 1) {
-			if (resonance = false) {
-				resonance = true;
-			} else {
-				resonance = false;
-			}
-		}
+		//if (button1 == 1) {
+		//	if (resonance = false) {
+		//		resonance = true;
+		//	} else {
+		//		resonance = false;
+		//	}
+		//}
 
-		if (pwr == 1) {
+		//if (pwr == 1) {
 			
-			lopass = 20000;
+		lopass = 20000;
 			hipass = 0;
 
 
 
 
-		}
+		//}
 
 
 		masterMixer.SetFloat ("lopass", lopass);
@@ -258,7 +263,7 @@ public class DashboardOutput : MonoBehaviour {
 			masterMixer.SetFloat ("masterVol", scale (900f, 1020f, -12, -80, brake));
 			intensity = -1;
 		} else {
-			masterMixer.SetFloat ("masterVol", -12);
+			masterMixer.SetFloat ("masterVol", masterVol);
 			brakePressure = scale (0f, 1020f, 0f, -.05f, brake);
 		}
 	
@@ -295,6 +300,15 @@ public class DashboardOutput : MonoBehaviour {
 
 	void MapTunerKnobToMood(){
 		float tunerknob= GameObject.Find("DashboardController").GetComponent<DashboardInterfaceReader> ().tune;
-		channelTune=scale (100, 1020, 1, 5, tunerknob);
-	}
+        if (tunerknob < 150)
+        {
+            channelTune = scale(0, 150, 0.5f, 2.5f, tunerknob);
+        }else if (tunerknob >= 150&&tunerknob<200) { 
+        channelTune =scale (150, 200, 2.5f, 4, tunerknob);
+        }
+        else if (tunerknob >= 200 )
+        {
+            channelTune = scale(200, 1020, 4, 5, tunerknob);
+        }
+    }
 }
