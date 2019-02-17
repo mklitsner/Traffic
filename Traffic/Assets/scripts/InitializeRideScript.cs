@@ -50,7 +50,7 @@ public class InitializeRideScript : MonoBehaviour
                 StartCoroutine("FadeInSceneMasterVol");
             }
         }
-        else if(scene.name=="Waiting")
+        else if(scene.name=="WaitingScene")
         {
             if (DIR.powerButtonState == 1 && !end)
             {

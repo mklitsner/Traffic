@@ -103,7 +103,7 @@ void Update()
         if(oscMessage.Values.Count>2){
             Rotate(Convert.ToSingle(msgValue));
         }else{
-            Debug.Log(msgString);
+          //  Debug.Log(msgString);
         }
 
         //Debug.Log(msgString);

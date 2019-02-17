@@ -104,23 +104,30 @@ public class CameraChange : MonoBehaviour {
                     for (int a = 0; a < angles.Length; a++)
                     {
                         angles[a] = shots[i].GetChild(a).gameObject;
-
-                        if (currentAngle < 0)
-                        {
-                            currentAngle = angles.Length - 1;
-                        }
-                        if (currentAngle > angles.Length - 1)
-                        {
-                            currentAngle = 0;
-                        }
+                     
+                       
                         if (currentScene == s)
                         {
                             if (currentShot == i)
                             {
-                                if (currentAngle == a)
+
+                            if (currentAngle > angles.Length - 1)
+                            {
+                                currentAngle = 0;
+                            }
+                            else if (currentAngle < 0)
+                            {
+                                currentAngle = angles.Length - 1;
+                                Debug.Log("currentangle looped to angle " + (angles.Length - 1));
+                            }
+
+
+                            if (currentAngle == a)
                                 {
 
-                                    angles[a].SetActive(true);
+                               
+
+                                angles[a].SetActive(true);
                                     angles[a].GetComponent<BloomOptimized>().threshold
                                     = GetComponent<BloomOptimized>().threshold;
                                     angles[a].GetComponent<BloomOptimized>().intensity
@@ -300,10 +307,10 @@ public class CameraChange : MonoBehaviour {
 
     IEnumerator WaitforWheelTurn()
     {
-       
 
-        yield return new WaitForSeconds(10.5f-turnStrength);
-       
+
+        yield return new WaitForSeconds((10.5f - turnStrength) * Time.timeScale);
+
         currentAngle += wheelDir;
        
         if (wheelDir != 0)
