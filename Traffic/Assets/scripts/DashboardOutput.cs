@@ -10,8 +10,8 @@ public class DashboardOutput : MonoBehaviour {
 	public AudioMixer nuetralMixer;
 	public AudioMixer sadMixer;
 	public AudioMixer spookyMixer;
-    //public AudioMixer upliftingMixerNeo;
-    //public AudioMixer spookyMixerNeo;
+   public AudioMixer lightMixer;
+    public AudioMixer darkMixer;
 
     [Range(-80, 0f)] public float masterVol = -12;
     [Range(1f,3.0f)]public float musicSpeed=1.0f;
@@ -71,10 +71,10 @@ public class DashboardOutput : MonoBehaviour {
 
 		MapIntensityToAudio (intensity,nuetralMixer,"nuetralLo","nuetralMed","nuetralHi");
 		MapIntensityToAudio (intensity,sadMixer,"sadLo","sadMed","sadHi");
-		MapIntensityToAudio (intensity,upliftingMixer,"upliftingLo","upliftingMed","upliftingHi");
-        //MapIntensityToAudio(intensity, upliftingMixerNeo, "upliftingLo", "upliftingMed", "upliftingHi");
+        MapIntensityToAudio(intensity, upliftingMixer, "upliftingLo", "upliftingMed", "upliftingHi");
         MapIntensityToAudio (intensity,spookyMixer,"spookyLo","spookyMed","spookyHi");
-        //MapIntensityToAudio(intensity, spookyMixerNeo, "spookyLo", "spookyMed", "spookyHi");
+        MapIntensityToAudio(intensity, lightMixer, "lightLo", "lightMed", "lightHi");
+        MapIntensityToAudio(intensity, darkMixer, "darkLo", "darkMed", "darkHi");
 
 
 
@@ -102,39 +102,32 @@ public class DashboardOutput : MonoBehaviour {
 		int button1 = GameObject.Find ("DashboardController").GetComponent<DashboardInterfaceReader> ().button1State;
 		int button2 = GameObject.Find ("DashboardController").GetComponent<DashboardInterfaceReader> ().button2State;
 		int button3 = GameObject.Find ("DashboardController").GetComponent<DashboardInterfaceReader> ().button3State;
-		float lopass= scale(1020, 0,5000,0,GameObject.Find ("DashboardController").GetComponent<DashboardInterfaceReader> ().bass);
-		float hipass= scale(1020, 0,0,5000,GameObject.Find ("DashboardController").GetComponent<DashboardInterfaceReader> ().treble);
-		float lores;
-		float hires;
+		//float lopass= scale(1020, 0,5000,0,GameObject.Find ("DashboardController").GetComponent<DashboardInterfaceReader> ().bass);
+		//float hipass= scale(1020, 0,0,5000,GameObject.Find ("DashboardController").GetComponent<DashboardInterfaceReader> ().treble);
+        float classVol= scale(1020, 0, 0, -80, GameObject.Find("DashboardController").GetComponent<DashboardInterfaceReader>().bass);
+        float neoVol = scale(1020, 0, 0, -80, GameObject.Find("DashboardController").GetComponent<DashboardInterfaceReader>().treble);
+        //      float lores;
+        //float hires;
 
 
-		//if (button1 == 1) {
-		//	if (resonance = false) {
-		//		resonance = true;
-		//	} else {
-		//		resonance = false;
-		//	}
-		//}
 
-		//if (pwr == 1) {
-			
-		lopass = 20000;
-			hipass = 0;
+        //lopass = 20000;
+        //hipass = 0;
 
 
 
 
-		//}
 
 
-		masterMixer.SetFloat ("lopass", lopass);
-		masterMixer.SetFloat ("hipass", hipass);
+        //masterMixer.SetFloat ("lopass", lopass);
+        //masterMixer.SetFloat ("hipass", hipass);
+        masterMixer.SetFloat ("classVol", classVol);
+        masterMixer.SetFloat ("neoVol", neoVol);
 
-		
-	}
+    }
 
 
-	void CorrectPitchOnSpeedChange(){
+    void CorrectPitchOnSpeedChange(){
 		float rawSpeed = musicSpeed;
 		float rawPitch =  (1.0f/ musicSpeed);
 
@@ -191,27 +184,24 @@ public class DashboardOutput : MonoBehaviour {
 		float nuetralVol=-80;
 		float sadVol=-80;
 		float spookyVol=-80;
+        float darkVol = -80;
+        float lightVol = -80;
 
-		if (channelTune <= 1.5) {
+        if (channelTune <= 1.5) {
 			happyVol = 0;
-			nuetralVol=scale (1, 1.5f, -80, 0, channelTune);
+            sadVol = scale(1, 1.5f, -80, 0, channelTune);
+           // nuetralVol =scale (1, 1.5f, -80, 0, channelTune);
 			sadVol=-80;
 			spookyVol=-80;
 		}
 
 
-		if (channelTune > 1.5f && channelTune <= 3f) {
-			nuetralVol = 0;
-			sadVol=scale (2.5f, 3, -80, 0, channelTune);
-			happyVol=scale (1.5f, 2, 0, -80, channelTune);
-			spookyVol=-80;
-		}
 
-		if (channelTune > 3f && channelTune <= 4.5f) {
+        if (channelTune > 1.5f && channelTune <= 4.5f) {
 			sadVol = 0;
-			nuetralVol=scale (3, 3.5f, 0, -80, channelTune);
-			spookyVol=scale (4, 4.5f, -80, 0, channelTune);
-			happyVol=-80;
+			happyVol=scale (1.5f, 3f, 0, -80, channelTune);
+			spookyVol=scale (3.5f, 4.5f, -80, 0, channelTune);
+			nuetralVol=-80;
 
 		}
 
@@ -223,18 +213,49 @@ public class DashboardOutput : MonoBehaviour {
 			nuetralVol=-80;
 
 		}
-			
-		masterMixer.SetFloat ("upliftingVol", happyVol);
+
+
+        if (channelTune <= 1.5f)
+        {
+            lightVol = 0;
+            darkVol = -80;
+        }
+
+        if (channelTune > 1.5f && channelTune <= 4.5f)
+        {
+            if (channelTune < 3f)
+            {
+                lightVol = 0;
+                darkVol = scale(1.5f, 3f, -80, 0, channelTune);
+            }
+            else
+            {
+                darkVol = 0;
+               lightVol = scale(3f, 4.5f, 0, -80, channelTune);
+            }
+
+        }
+
+
+        if (channelTune >= 4.5f)
+        {
+            lightVol = -80;
+            darkVol = 0;
+        }
+
+        masterMixer.SetFloat ("upliftingVol", happyVol);
 		masterMixer.SetFloat ("nuetralVol", nuetralVol);
 		masterMixer.SetFloat ("sadVol", sadVol);
 		masterMixer.SetFloat ("spookyVol", spookyVol);
-
-	
-
-
+        masterMixer.SetFloat("darkVol", darkVol);
+        masterMixer.SetFloat("lightVol", lightVol);
 
 
-	}
+
+
+
+
+    }
 
 
 	float scale(float OldMin, float OldMax, float NewMin, float NewMax, float OldValue){
