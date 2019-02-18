@@ -4,11 +4,12 @@ using System.Collections.Generic;
 
 public class CarEngine : MonoBehaviour {
 
-	public GameObject Arduino;
+	GameObject Arduino;
 	float intensity;
 	float pitch;
 
-	public Transform path;
+    public string PathName;
+	Transform path;
 	public float maxSteerAngle = 50f;
 	public float maxTorque= 30f;
 	public float velocity;
@@ -28,7 +29,9 @@ public class CarEngine : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		turnPercision=15;
+        path= GameObject.Find(PathName).transform;
+        Arduino = GameObject.Find("DigitalDashboardController");
+        turnPercision =15;
 
 		Transform[] pathTransforms = path.GetComponentsInChildren<Transform> ();
 		nodes = new List<Transform> ();

@@ -52,9 +52,14 @@ public class CarSpawningScript : MonoBehaviour {
                         //newCar.transform.position=new Vector3 (spawns[i].position.x,newCar.transform.position.y,spawns[i].position.z);
                         newCar.transform.position = spawns[i].position;
                         newCar.transform.rotation = spawns[i].rotation;
-                        newCar.GetComponent<TrafficScript>().speedmultiplier = Random.Range(spawnSpeed, spawnSpeed + 0.01f);
-
-                        newCar.GetComponent<Renderer>().material.SetColor("_CarColor", new Color(Random.Range(0, 1.0f), Random.Range(0, 1.0f), Random.Range(0, 1.0f)));
+                        if (newCar.GetComponent<TrafficScript>() != null)
+                        {
+                            newCar.GetComponent<TrafficScript>().speedmultiplier = Random.Range(spawnSpeed, spawnSpeed + 0.01f);
+                        }
+                        if (newCar.GetComponent<Renderer>() != null)
+                        {
+                            newCar.GetComponent<Renderer>().material.SetColor("_CarColor", new Color(Random.Range(0, 1.0f), Random.Range(0, 1.0f), Random.Range(0, 1.0f)));
+                        }
                         newCar.transform.SetParent(transform.parent); 
                     }
 				}

@@ -21,6 +21,8 @@ public class CameraChange : MonoBehaviour {
 	public int currentScene =0;
     public Transform[] scenes;
 
+    float colorTime;
+
     float wheelPos;
     float turnStrength;
     bool wheelTurnedHard=false;
@@ -40,6 +42,8 @@ public class CameraChange : MonoBehaviour {
 	public Color sadColor;
 	public Color spookyColor;
 	Color skyColor;
+    float exposure;
+    float atmosphere;
 
 
     float lastWheelPos;
@@ -47,10 +51,11 @@ public class CameraChange : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+       
 
 
 
-        DIR = DashBoard.GetComponent<DashboardInterfaceReader>();
+DIR = DashBoard.GetComponent<DashboardInterfaceReader>();
 
 
 
@@ -291,19 +296,19 @@ public class CameraChange : MonoBehaviour {
 
 		ManipulateSkyBox ();
 
+
+
+
 	
-		GetComponent<VignetteAndChromaticAberration> ().intensity = scale (4, 5, 0, 0.16f, Arduino.GetComponent<DashboardOutput> ().channelTune);
 
-		if (GetComponent<VignetteAndChromaticAberration> ().intensity < 0) {
-			GetComponent<VignetteAndChromaticAberration> ().intensity = 0;
-		}
-			
+        GetComponent<VignetteAndChromaticAberration>().intensity = scale(4, 5, 0, 0.16f, Arduino.GetComponent<DashboardOutput>().channelTune);
 
 
-		//print (" shot:"+currentShot+" angle:"+currentAngle+" scene:"+currentScene);
 
-		
-	}
+        //print (" shot:"+currentShot+" angle:"+currentAngle+" scene:"+currentScene);
+
+
+    }
 
     IEnumerator WaitforWheelTurn()
     {
@@ -325,16 +330,35 @@ public class CameraChange : MonoBehaviour {
 	void ManipulateSkyBox(){
 		float channeltune=Arduino.GetComponent<DashboardOutput> ().channelTune;
 		float intensity=Arduino.GetComponent<DashboardOutput> ().intensity;
+        Color skyColorTarget;
+        float exposureTarget;
+        float atmosphereTarget;
 
 		if (channeltune <= 3) {
-			skyColor = Color.Lerp (happyColor, sadColor, scale (1, 3, 0, 1, channeltune));
-		} else if (channeltune > 3) {
-			skyColor = Color.Lerp (sadColor, spookyColor, scale (3, 5, 0, 1, channeltune));
+            skyColorTarget = Color.Lerp (happyColor, sadColor, scale (1, 3, 0, 1, channeltune));
+		} else  {
+            skyColorTarget = Color.Lerp (sadColor, spookyColor, scale (3, 5, 0, 1, channeltune));
 		}
+        exposureTarget = scale(5, 1, 0.2f, 2.5f, channeltune);
+        atmosphereTarget = scale(-1, 1, 1.0f, 1.8f, intensity);
 
-		GetComponent<Skybox> ().material.SetColor ("_SkyTint", skyColor);
-		GetComponent<Skybox> ().material.SetFloat ("_Exposure", scale (5, 1, 0.2f, 2.5f, channeltune));
-		GetComponent<Skybox> ().material.SetFloat ("_AtmosphereThickness", scale (-1,1, 1.0f, 1.8f, intensity));
+        if (skyColorTarget != skyColor && colorTime < 1)
+        {
+            colorTime += Time.deltaTime * 0.2f;
+            skyColor = Color.Lerp(skyColor, skyColorTarget, colorTime);
+            exposure = Mathf.Lerp(exposure, exposureTarget, colorTime);
+            atmosphere = Mathf.Lerp(atmosphere, atmosphereTarget, colorTime);
+
+        }
+        else
+        {
+            colorTime = 0;
+        }
+
+      
+        GetComponent<Skybox> ().material.SetColor ("_SkyTint", skyColor);
+		GetComponent<Skybox> ().material.SetFloat ("_Exposure",exposure);
+		GetComponent<Skybox> ().material.SetFloat ("_AtmosphereThickness",atmosphere );
 	}
 
 
