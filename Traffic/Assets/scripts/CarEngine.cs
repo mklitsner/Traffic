@@ -9,7 +9,7 @@ public class CarEngine : MonoBehaviour {
 	float pitch;
 
     public string PathName;
-	Transform path;
+	public Transform path;
 	public float maxSteerAngle = 50f;
 	public float maxTorque= 30f;
 	public float velocity;
@@ -25,22 +25,14 @@ public class CarEngine : MonoBehaviour {
 
 
 	private int currentNode =0;
-	private List<Transform> nodes;
+	public List<Transform> nodes;
 
 	// Use this for initialization
 	void Start () {
-        path= GameObject.Find(PathName).transform;
+
         Arduino = GameObject.Find("DigitalDashboardController");
         turnPercision =15;
-
-		Transform[] pathTransforms = path.GetComponentsInChildren<Transform> ();
-		nodes = new List<Transform> ();
-
-		for (int i = 0; i < pathTransforms.Length; i++) {
-			if (pathTransforms[i] != path.transform){
-				nodes.Add(pathTransforms[i]);
-			}
-		}
+        SetPath(PathName,0);
 
 	}
 
@@ -150,6 +142,24 @@ public class CarEngine : MonoBehaviour {
 		return(NewValue);
 	}
 
-	
+    public void SetPath(string _PathName, int startNode)
+
+
+    {
+        PathName = _PathName;
+        path = GameObject.Find(_PathName).transform;
+        Transform[] pathTransforms = path.GetComponentsInChildren<Transform>();
+        nodes = new List<Transform>();
+
+        for (int i = 0; i < pathTransforms.Length; i++)
+        {
+            if (pathTransforms[i] != path.transform)
+            {
+                nodes.Add(pathTransforms[i]);
+            }
+        }
+    }
+
+
 
 }
