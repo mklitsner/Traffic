@@ -10,7 +10,7 @@ public class InitializeRideScript : MonoBehaviour
     DashboardOutput DO;
     CanvasFadeScript CFS;
     Scene scene;
-    bool end;
+    bool end=true;
     bool start;
     void Awake()
     {
