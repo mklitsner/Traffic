@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CarSpawningScript : MonoBehaviour {
 	public GameObject Arduino;
+    public GameObject SpawnHolder;
 	public Transform[] spawns;
 	public float spawnFrequency;
 	public float spawnSpeed;
@@ -60,7 +61,7 @@ public class CarSpawningScript : MonoBehaviour {
                         {
                             newCar.GetComponent<Renderer>().material.SetColor("_CarColor", new Color(Random.Range(0, 1.0f), Random.Range(0, 1.0f), Random.Range(0, 1.0f)));
                         }
-                        newCar.transform.SetParent(transform.parent); 
+                        newCar.transform.SetParent(SpawnHolder.transform); 
                     }
 				}
 				}
