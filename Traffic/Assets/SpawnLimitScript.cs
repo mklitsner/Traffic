@@ -7,6 +7,7 @@ public class SpawnLimitScript : MonoBehaviour
 
     public int spawnLimit=30;
     public bool overLimit;
+    bool ready=true;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,18 +21,39 @@ public class SpawnLimitScript : MonoBehaviour
         {
             overLimit = true;
         }
-
-
-        if (overLimit)
+        else
         {
-            //select random object in child count
-            Transform unluckyOne = transform.GetChild(Random.Range(0, transform.childCount));
+            overLimit = false;
+        }
 
-            //if object has disintegrate script, activate it
+
+        if (overLimit )
+        {
+            Transform unluckyOne = transform.GetChild(Random.Range(0, transform.childCount));
             if (unluckyOne.gameObject.GetComponent<DeColliderandDestroy>() != null)
             {
                 unluckyOne.gameObject.GetComponent<DeColliderandDestroy>().disable = true;
             }
+            //select random object in child count
+            //if (ready)
+            //{
+            //    //StartCoroutine("WaitToDisable");
+            //    //if object has disintegrate script, activate it
+            //}
         }
+        else
+        {
+            //StopCoroutine("WaitToDisable");
+        }
+    }
+
+    IEnumerator WaitToDisable()
+    {
+
+        ready = false;
+      
+        yield return new WaitForSecondsRealtime(0.2f);
+        ready = true;
+
     }
 }
