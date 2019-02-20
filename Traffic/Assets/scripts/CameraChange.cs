@@ -19,8 +19,8 @@ public class CameraChange : MonoBehaviour {
 	  Transform[] shots;
 
 	public int currentScene =0;
-    public Transform[] scenes;
-
+    public Transform[] selectedScenes;
+    Transform[] scenes;
     float colorTime;
 
     float wheelPos;
@@ -36,7 +36,7 @@ public class CameraChange : MonoBehaviour {
     int wheelDir;
 
 	public bool testingArduino;
-	float counter;
+	//float counter;
 
 	public Color happyColor;
 	public Color sadColor;
@@ -90,11 +90,11 @@ DIR = DashBoard.GetComponent<DashboardInterfaceReader>();
 
 
 
-		scenes = new Transform[transform.childCount];
+		scenes = new Transform[selectedScenes.Length];
 
         for (int s = 0; s < scenes.Length; s++)
         {
-            scenes[s] = transform.GetChild(s);
+            scenes[s] = selectedScenes[s];
                  shots = new Transform[scenes[s].childCount];
 
 
