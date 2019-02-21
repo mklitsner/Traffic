@@ -20,7 +20,7 @@ public class CanvasFadeScript : MonoBehaviour
     IEnumerator FadeTo(float aValue, float aTime)
     {
         float alpha = Panel.GetComponent<Image>().color.a;
-        for (float t = 0.0f; t < 1.0f; t += Time.deltaTime/Time.timeScale/ aTime)
+        for (float t = 0.0f; t < 1.0f; t += Time.unscaledDeltaTime/ aTime)
         {
             Panel.GetComponent<Image>().color = new Color(0, 0, 0, Mathf.Lerp(alpha, aValue, t));
 

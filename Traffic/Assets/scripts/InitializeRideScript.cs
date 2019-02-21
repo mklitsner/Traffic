@@ -12,6 +12,7 @@ public class InitializeRideScript : MonoBehaviour
     Scene scene;
     bool end=true;
     bool start;
+    public bool rideOn;
     void Awake()
     {
         DIR = GameObject.Find("DashboardController").GetComponent<DashboardInterfaceReader>();
@@ -33,7 +34,7 @@ public class InitializeRideScript : MonoBehaviour
     {
         if (scene.name == "MainScene")
         {
-            if (DIR.powerButtonState == 0 && !end)
+            if (DIR.ignitionState == 1 && !end)
             {
                 //FadeCameraout, at end of fade, end the scene;
                 CFS.FadeCanvasOut(fadeLength);
@@ -42,7 +43,7 @@ public class InitializeRideScript : MonoBehaviour
                 StartCoroutine("FadeOutSceneMasterVol");
             }
 
-            if(DIR.powerButtonState==1 && !start)
+            if(DIR.ignitionState == 0 && !start)
             {
                 CFS.FadeCanvasIn(fadeLength);
                 end = false;
@@ -52,7 +53,7 @@ public class InitializeRideScript : MonoBehaviour
         }
         else if(scene.name=="WaitingScene")
         {
-            if (DIR.powerButtonState == 1 && !end)
+            if (DIR.ignitionState == 0 && !end)
             {
                 //FadeCameraout, at end of fade, end the scene;
                 CFS.FadeCanvasOut(fadeLength);
@@ -61,7 +62,7 @@ public class InitializeRideScript : MonoBehaviour
                 start = false;
             }
 
-            if (DIR.powerButtonState == 0 && !start)
+            if (DIR.ignitionState == 1 && !start)
             {
                 CFS.FadeCanvasIn(fadeLength);
                 end = false;
@@ -73,19 +74,22 @@ public class InitializeRideScript : MonoBehaviour
     {
         float _fadeLength= fadeLength;
         float masterVol = DO.masterVol;
-        for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / Time.timeScale / _fadeLength)
+        for (float t = 0.0f; t < 1.0f; t += Time.unscaledDeltaTime / _fadeLength)
         {
             DO.masterVol= Mathf.Lerp(masterVol, -80, t);
 
             yield return null;
         }
         Debug.LogWarning("SoundFadedout");
+        rideOn = false;
+
     }
     IEnumerator FadeInSceneMasterVol()
     {
+        rideOn = true;
         float _fadeLength = fadeLength;
         float masterVol = DO.masterVol;
-        for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / Time.timeScale / _fadeLength)
+        for (float t = 0.0f; t < 1.0f; t += Time.unscaledDeltaTime / _fadeLength)
         {
             DO.masterVol = Mathf.Lerp(masterVol, -12, t);
 

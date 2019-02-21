@@ -15,11 +15,24 @@ public class TimeScaleScript : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        float intensity = GetComponent<DashboardOutput>().intensity;
-        float slowMoSpeed = scale(-1, 1, 0.1f, 4, intensity);
-        Time.timeScale = slowMoSpeed;
+       
+       
+    }
 
-        Time.fixedDeltaTime = slowMoSpeed * 0.02f;
+    private void Update()
+    {
+        if (GetComponent<InitializeRideScript>().rideOn)
+        {
+            float intensity = GetComponent<DashboardOutput>().intensity;
+            float slowMoSpeed = scale(-1, 1, 0.1f, 4, intensity);
+            Time.timeScale = slowMoSpeed;
+
+            Time.fixedDeltaTime = slowMoSpeed * 0.02f;
+        }
+        if (GetComponent<InitializeRideScript>().rideOn == false)
+        {
+            Time.timeScale = 0;
+        }
     }
     float scale(float OldMin, float OldMax, float NewMin, float NewMax, float OldValue)
     {
